@@ -44,7 +44,7 @@ const onListening = () => {
     debug("Listening on " + bind);
 };
 
-mongoose.connect('mongodb+srv://djuarez:P0pkNBfyLMUDgTWi@cluster0.6l0qy.mongodb.net/meanapp?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://padrote:IQKV1wlLOkaxKs5K@cluster0-w6ybk.mongodb.net/meanstack?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, (err, connect) => {
