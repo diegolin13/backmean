@@ -33,6 +33,7 @@ router.post("", checkAuth, multer({ storage: storage }).single('image'), (req, r
         title: req.body.title,
         content: req.body.content,
         imagePath: url + '/images/' + req.file.filename,
+        creator: req.userData.userId
     });
     post.save((err, result) => {
         if (err) {
@@ -94,9 +95,10 @@ router.put('/:id', checkAuth, multer({ storage: storage }).single('image'), (req
         _id: req.body.id,
         title: req.body.title,
         content: req.body.content,
-        imagePath: imagePath
+        imagePath: imagePath,
+        creator: req.userData.userId,
     });
-    Post.updateOne({ _id: req.params.id }, post, (err, result) => {
+    Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post, (err, result) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -104,10 +106,18 @@ router.put('/:id', checkAuth, multer({ storage: storage }).single('image'), (req
             });
         }
 
-        res.json({
-            message: 'Post updated successfully',
-            result
-        })
+        if (result.nModified > 0) {
+            res.json({
+                message: 'Post updated successfully',
+                result
+            });
+        } else {
+            res.status(401).json({
+                message: 'Unauthorized to edit posts'
+            });
+        }
+
+
 
     });
 });
@@ -128,17 +138,23 @@ router.get('/:id', (req, res, next) => {
 
 router.delete('/:id', checkAuth, (req, res, next) => {
     const id = req.params.id;
-    Post.deleteOne({ _id: id }, (err, result) => {
+    Post.deleteOne({ _id: id, creator: req.userData.userId }, (err, result) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
                 message: err
             });
         }
-        res.json({
-            message: 'Post deleted',
-            id
-        });
+        if (result.n > 0) {
+            res.json({
+                message: 'Post updated successfully',
+                result
+            });
+        } else {
+            res.status(401).json({
+                message: 'Unauthorized to edit posts'
+            });
+        }
     });
 
 });
