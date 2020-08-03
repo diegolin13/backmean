@@ -38,8 +38,7 @@ router.post("", checkAuth, multer({ storage: storage }).single('image'), (req, r
     post.save((err, result) => {
         if (err) {
             return res.status(500).json({
-                ok: false,
-                message: err
+                message: 'Post failed'
             });
         }
         res.status(201).json({
@@ -64,7 +63,7 @@ router.get('', (req, res, next) => {
         return Post.find().skip(pageSize * (currentPage - 1)).limit(pageSize)
             .exec((err, data) => {
                 if (err) {
-                    return res.status(500).json({ ok: false, message: err })
+                    return res.status(500).json({ message: 'Error fetching posts' })
                 }
                 res.json({ ok: true, posts: data });
             });
@@ -73,8 +72,7 @@ router.get('', (req, res, next) => {
     Post.find((err, data) => {
         if (err) {
             return res.status(400).json({
-                ok: false,
-                message: err
+                message: 'error fetching data'
             });
         }
 
@@ -101,8 +99,7 @@ router.put('/:id', checkAuth, multer({ storage: storage }).single('image'), (req
     Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post, (err, result) => {
         if (err) {
             return res.status(500).json({
-                ok: false,
-                message: err
+                message: 'Error editing data'
             });
         }
 
@@ -126,8 +123,7 @@ router.get('/:id', (req, res, next) => {
     Post.findById(req.params.id, (err, post) => {
         if (err) {
             return res.status(500).json({
-                ok: false,
-                err
+                message: 'Post not found'
             });
         }
         res.json({
@@ -141,8 +137,7 @@ router.delete('/:id', checkAuth, (req, res, next) => {
     Post.deleteOne({ _id: id, creator: req.userData.userId }, (err, result) => {
         if (err) {
             return res.status(500).json({
-                ok: false,
-                message: err
+                message: 'Error deleting the post'
             });
         }
         if (result.n > 0) {
