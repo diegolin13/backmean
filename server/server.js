@@ -1,3 +1,4 @@
+require('../config');
 const http = require('http');
 const app = require('../index');
 const debug = require("debug")("node-angular");
@@ -44,7 +45,7 @@ const onListening = () => {
     debug("Listening on " + bind);
 };
 
-mongoose.connect('mongodb+srv://padrote:IQKV1wlLOkaxKs5K@cluster0-w6ybk.mongodb.net/meanstack?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://padrote:' + process.env.MONGO_ATLAS_PWD + '@cluster0-w6ybk.mongodb.net/meanstack?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, (err, connect) => {
